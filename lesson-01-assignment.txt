@@ -1,0 +1,55 @@
+Question 1
+Collect emails for students in the current Intro course
+
+Find id of intro class (coding_class_id):
+intro_class = CodingClass.find_by(title: 'Intro to Programming')
+(id: 1)
+
+Find id of current trimester (trimester_id):
+current_trimester = Trimester.find_by(year: '2025', term: 'Spring')
+(id: 5)
+
+Find course_id from courses tab
+course = Course.find_by(coding_class_id: intro_class.id, trimester_id: current_trimester.id)
+(id: 5, coding_class_id: 1, trimester_id: 5)
+
+Find enrollments(to know sudents id) from enrollments where course_id(5)
+enrollments = Enrollment.where(course_id: course.id)
+
+Find students id and emails
+enrollments.first(2).each do |enrollment|
+    student = Student.find(enrollment.student_id)
+    puts "id - #{student.id}, email - #{student.email}"
+end
+
+id - 41, email - murray@zemlak.example
+id - 42, email - amalia@heathcote.test
+
+___________________________________________________________________________________________
+Question 2
+Email all mentors who have not assigned a final grade
+
+Find ungraded enrollments
+ungraded_enrollments = Enrollment.where(course_id: course.id, final_grade: nil)
+
+Find mentor assignments for those enrollments
+mentor_assignments = []
+ungraded_enrollments.each do |enrollment|
+  mentor_assignment = MentorEnrollmentAssignment.find_by(enrollment_id: enrollment.id)
+  mentor_assignments << mentor_assignment if mentor_assignment
+end
+
+Get the mentors from those assignments
+mentors = []
+mentor_assignments.each do |assignment|
+  mentor = Mentor.find(assignment.mentor_id)
+  mentors << mentor if mentor
+end
+
+Find mentors id and emails
+mentors.first(2).each do |mentor|
+  puts "id - #{mentor.id}, email - #{mentor.email}"
+end
+
+id - 25, email - graham@yost-cummerata.example
+id - 26, email - myles@zulauf.test
