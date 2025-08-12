@@ -1,0 +1,33 @@
+Question 1
+
+spring2026 = Trimester.find_by(year: 2026, term: 'Spring')
+puts spring2026.id
+
+
+CodingClass.all.each do |cc|
+  Course.create(coding_class_id: cc.id, trimester_id: spring2026.id)
+end
+
+
+
+Question 2
+Create a new student record and enroll the student in the Intro to Programming course for the Spring 2026 trimester.
+
+student = Student.create(first_name: 'Jane_Firstname', last_name: 'Doe_Lastname', email: 'janef.doel@email.com')
+
+spring2026 = Trimester.find_by(year: '2026', term: 'Spring')
+intro_class = CodingClass.find_by(title: 'Intro to Programming')
+
+course = Course.find_by(trimester_id: spring2026.id, coding_class: intro_class.id)
+puts course.id
+
+enrollment = Enrollment.create(student_id: student.id, course_id: course.id)
+
+
+Find a mentor with no more than 2 students (enrollments) assigned and assign that mentor to your new student's enrollment.
+
+mentor = Mentor.all.find do |m|
+    MentorEnrollmentAssignment.where(mentor_id: m.id).count <= 2
+end
+
+MentorEnrollmentAssignment.create!(mentor: mentor, enrollment: enrollment)
