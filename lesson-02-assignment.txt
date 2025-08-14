@@ -1,0 +1,94 @@
+Question 1
+
+spring2026 = Trimester.find_by(year: 2026, term: 'Spring')
+puts spring2026.id
+
+
+CodingClass.all.each do |cc|
+  Course.create(coding_class_id: cc.id, trimester_id: spring2026.id)
+end
+
+
+
+Question 2
+Create a new student record and enroll the student in the Intro to Programming course for the Spring 2026 trimester.
+
+student = Student.create(first_name: 'Jane_Firstname', last_name: 'Doe_Lastname', email: 'janef.doel@email.com')
+
+spring2026 = Trimester.find_by(year: '2026', term: 'Spring')
+intro_class = CodingClass.find_by(title: 'Intro to Programming')
+
+course = Course.find_by(trimester_id: spring2026.id, coding_class: intro_class.id)
+puts course.id
+
+enrollment = Enrollment.create(student_id: student.id, course_id: course.id)
+
+
+Find a mentor with no more than 2 students (enrollments) assigned and assign that mentor to your new student's enrollment.
+
+mentor = Mentor.all.find do |m|
+    MentorEnrollmentAssignment.where(mentor_id: m.id).count <= 2
+end
+
+MentorEnrollmentAssignment.create!(mentor: mentor, enrollment: enrollment)
+
+
+Question 3
+
+The Habit Tracker is application for users to follow their personal habits and see progress over time.
+
+Regular User: Can make new habits, change or remove habits. Can mark habit as done for day and see own progress.
+
+Core Features / User Scenarios:
+- User can make new habit with name, description, and frequency (daily or weekly).
+- User can mark habit as done for the day.
+- User can see dashboard with progress, streaks, and statistics for each habit.
+- User can change or remove habits if want.
+- App can show habit trends over time (how many days done or missed). (Ideally with heatmap visualization)
+
+Flow Example:
+User log in or make new account.
+User add habit, for example "Study Ruby on Rails at least 1 hour."
+Each day, user mark habit as done.
+Dashboard show progress and streaks automatically.
+User can change or remove habits if need.
+
+Data :
+Users: name (nickname), email, password
+Habits: title, description, frequency, user_id
+Habit Entries: date, completion status, habit_id, optional notes
+
+Question 4 
+Habit Tracker Data Model
+
+Users
+id (primary key)
+name (nickname)
+email
+password
+created_at
+updated_at
+
+Habits
+id (primary key)
+title (habit name)
+description
+frequency (daily / weekly)
+user_id (foreign key)
+created_at
+updated_at
+
+HabitEntries
+id (primary key)
+date
+completed (true/false)
+habit_id (foreign key)
+note (optional)
+created_at
+updated_at
+
+Relationships
+User has many habits
+Habit belongs to user
+Habit has many habit_entries
+HabitEntry belongs to habit
